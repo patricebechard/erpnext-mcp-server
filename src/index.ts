@@ -21,6 +21,7 @@ import {
   McpError,
   ReadResourceRequestSchema
 } from "@modelcontextprotocol/sdk/types.js";
+import type { ReadResourceRequest, CallToolRequest } from "@modelcontextprotocol/sdk/types.js";
 import axios, { AxiosInstance } from "axios";
 
 // ERPNext API client configuration
@@ -260,7 +261,7 @@ server.setRequestHandler(ListResourceTemplatesRequestSchema, async () => {
 /**
  * Handler for reading ERPNext resources.
  */
-server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+server.setRequestHandler(ReadResourceRequestSchema, async (request: ReadResourceRequest) => {
   if (!erpnext.isAuthenticated()) {
     throw new McpError(
       ErrorCode.InvalidRequest,
@@ -442,7 +443,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 /**
  * Handler for tool calls.
  */
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest) => {
   switch (request.params.name) {
     case "get_documents": {
       if (!erpnext.isAuthenticated()) {
