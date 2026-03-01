@@ -43,6 +43,19 @@ class ERPNextClient {
                 `token ${apiKey}:${apiSecret}`;
             this.authenticated = true;
         }
+        // Apply extra HTTP headers (e.g. proxy auth) if provided
+        const extraHeaders = process.env.ERPNEXT_EXTRA_HTTP_HEADERS;
+        if (extraHeaders) {
+            try {
+                const parsed = JSON.parse(extraHeaders);
+                for (const [key, value] of Object.entries(parsed)) {
+                    this.axiosInstance.defaults.headers.common[key] = value;
+                }
+            }
+            catch (e) {
+                console.error('Failed to parse ERPNEXT_EXTRA_HTTP_HEADERS:', e);
+            }
+        }
     }
     isAuthenticated() {
         return this.authenticated;

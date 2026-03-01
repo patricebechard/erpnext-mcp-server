@@ -55,11 +55,24 @@ class ERPNextClient {
     // Configure authentication if credentials provided
     const apiKey = process.env.ERPNEXT_API_KEY;
     const apiSecret = process.env.ERPNEXT_API_SECRET;
-    
+
     if (apiKey && apiSecret) {
-      this.axiosInstance.defaults.headers.common['Authorization'] = 
+      this.axiosInstance.defaults.headers.common['Authorization'] =
         `token ${apiKey}:${apiSecret}`;
       this.authenticated = true;
+    }
+
+    // Apply extra HTTP headers (e.g. proxy auth) if provided
+    const extraHeaders = process.env.ERPNEXT_EXTRA_HTTP_HEADERS;
+    if (extraHeaders) {
+      try {
+        const parsed = JSON.parse(extraHeaders);
+        for (const [key, value] of Object.entries(parsed)) {
+          this.axiosInstance.defaults.headers.common[key] = value as string;
+        }
+      } catch (e) {
+        console.error('Failed to parse ERPNEXT_EXTRA_HTTP_HEADERS:', e);
+      }
     }
   }
 
